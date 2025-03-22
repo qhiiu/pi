@@ -1,0 +1,134 @@
+Definition¶
+This is the standard edwards25519 curve definition, no Monero specific stuff here, except the naming convention. The convention comes from the CryptoNote whitepaper and is widely used in Monero literature.
+
+Curve equation¶
+
+−x^2 + y^2 = 1 − (121665/121666) * x^2 * y^2
+Note:
+
+curve is in two dimensions (nothing fancy, like all the curves is high school)
+curve is mirrored below y axis due to y^2 part of the equation (not a polynomial)
+Base point: G¶
+The base point is a specific point on the curve. It is used as a basis for further calculations. It is an arbitrary choice by the curve authors, just to standardize the scheme.
+
+Note that it is enough to specify the y value and the sign of the x value. That's because the specific x can be calculated from the curve equation.
+
+
+G = (x, 4/5)  # take the point with the positive x
+
+# The hex representation of the base point
+5866666666666666666666666666666666666666666666666666666666666666
+Prime order of the base point: l¶
+In layment terms, the "canvas" where the curve is drawn is assumed to have a finite "resolution", so point coordinates must "wrap around" at some point. This is achieved by modulo the l value (lowercase L). In other words, the l defines the maximum scalar we can use.
+
+
+l = 2^252 + 27742317777372353535851937790883648493
+# => 7237005577332262213973186563042994240857116359379907606001950938285454250989
+The l is a prime number specified by the curve authors.
+
+In practice this is the private key's strength.
+
+Total number of points on the curve¶
+The total number of points on the curve is also a prime number:
+
+
+q = 2^255 - 19
+In practice not all points are "useful" and so the private key strength is limited to l describe above.
+
+///////////////////////////////////////////// 
+
+In Monero, the root private key is generated randomly. Other private keys are derived deterministically from the root private key.
+
+Private key must be kept secret.
+
+Private key is a large integer impossible to guess, like: 108555083659983933209597798445644913612440610624038028786991485007418559037440
+
+Private key is 256 bits long.
+
+Private key is a scalar, meaning it is a single value.
+
+In equations scalars are represented by lowercase letters.
+
+Relation to Ed25519¶
+Being simply a random integer, private key is not specific to any particular asymmetric cryptography scheme.
+
+In context of Monero EC cryptography the private key is a number the base point G is multiplied by. The result of the multiplication is the public key P (another point on the curve). Multiplication of a point by a number has a very special definition in EC cryptography. See this this guide for details.
+
+Key strength¶
+Before deriving the public key, private key is subject to modulo l, where l is the maximum scalar allowed by the edwards25519 curve.
+
+The l is on the order of 2^252, so the effective key strength is technically 252 bits, not 256 bits. This is standard for EC cryptography and is more of a cosmetic nuance than any concern.
+
+Encoding¶
+In user-facing contexts, the private key integer is:
+
+Taken modulo l to avoid malleability
+Put as array of 32 bytes in a little-endian direction (the first byte is the least significant)
+Converted to hexadecimal form, like: b3588a87056fb21dc4d052d59e83b54293882e646b543c29478e4cf45c28a402
+Private spend key¶
+Private spend key is used to spend moneros.
+
+More specifically, it is used to build one-time private keys which allow to spend related outputs.
+
+Private view key¶
+Private view key is used to recognize your incoming transactions on the otherwise opaque blockchain.
+
+One-time private keys¶
+One-time private key like construct is used in stealth addresses.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+convert private key a015bcd32 to stellar private key form
+ChatGPT đã nói:
+To convert a private key to the Stellar private key format, it's necessary to use a specific process because Stellar uses a particular encoding format based on base32.
+
+In Stellar, private keys are typically encoded using the Stellar keypair format, which includes a specific prefix, usually encoded in base32. The Stellar keypair contains both a public and private key.
+
+Here’s a high-level overview of how to convert a raw private key (like the one you provided a015bcd32) to the Stellar private key format:
+
+Generate the keypair: Stellar uses the Ed25519 elliptic curve to generate key pairs. You'd need to use the corresponding algorithm to generate the key pair from your private key.
+
+Base32 Encoding: Stellar keys are encoded using base32. The private key format typically begins with S followed by a base32-encoded string.
+
+
+
+
+
+
+
+
+
+
+
+
+
