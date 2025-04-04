@@ -29,6 +29,7 @@ def run():
     print("Public Key: " + acc.public_key)
     # print("Secret Seed: " + acc.secret)
     pi_address = acc.public_key
+    # pi_address = "GDMLQEEPG2EGX5AD2UVIODLQNZ7GW7V2TRYZJ2OF2DVZF5RMMFXKIJIX"
     check_pi_balance(pi_address)
 
 for i in range(100000000):
